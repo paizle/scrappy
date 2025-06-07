@@ -3,7 +3,7 @@ from app.unintrusive_scraper.scraper import ScrapingStrategy
 
 class WatersStrategy(ScrapingStrategy):
   def get_url(self) -> str:
-    return "https://en.wikipedia.org/wiki/List_of_bodies_of_water_of_New_Brunswick"
+    return "/wiki/List_of_bodies_of_water_of_New_Brunswick"
 
   def parse(self, soup: BeautifulSoup) -> dict:
     table = soup.find("table", {"class": "wikitable"})

@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import random
 import urllib.robotparser
+import urllib.parse # Added for urljoin
 import logging
 import os
 
