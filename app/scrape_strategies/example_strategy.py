@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup
-from app.unintrusive_scraper.scraper import ScrapingStrategy
+from app.unintrusive_scraper.page_scraper import PageScrapingStrategy
 
-class ExampleComStrategy(ScrapingStrategy):
+class ExampleComStrategy(PageScrapingStrategy):
   def get_url(self) -> str:
-    return "https://example.com"
+    return "/"
 
   def parse(self, soup: BeautifulSoup) -> dict:
     title = soup.title.string.strip() if soup.title else "No title"

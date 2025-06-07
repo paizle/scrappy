@@ -10,10 +10,10 @@ import os
 # Configure logging (important for debugging and monitoring)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-class ScrapingStrategy(ABC):
+class PageScrapingStrategy(ABC):
     @abstractmethod
     def get_url(self) -> str:
-        """Return the URL to scrape."""
+        """Return the root URL to scrape."""
         pass
 
     @abstractmethod
@@ -21,7 +21,7 @@ class ScrapingStrategy(ABC):
         """Extract data from the page and return it as a dictionary."""
         pass
 
-class UnintrusiveScraper:
+class UnintrusivePageScraper:
     def __init__(self, base_url):
         """
         Initializes the scraper with a base URL and a User-Agent.
@@ -88,12 +88,9 @@ class UnintrusiveScraper:
         for attempt in range(self.max_retries):
             try:
                 response = requests.get(url, headers=headers)
-                response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-
                 # Save to cache before returning
                 with open(cache_path, 'w', encoding='utf-8') as f:
                     f.write(response.text)
-
 
                 return response.text
 
@@ -128,10 +125,10 @@ class UnintrusiveScraper:
         data = [element.text.strip() for element in elements]
         return data
     
-    def scrape(self, strategy: ScrapingStrategy) -> dict:
+    def scrape(self, strategy: PageScrapingStrategy) -> dict:
         """Perform the scraping using the given strategy."""
 
-        html_content = self.get_page_content(strategy.get_url())
+        html_content = self.get_page_content(self.base_url + strategy.get_url())
         
         if not html_content:
             return []
@@ -139,19 +136,3 @@ class UnintrusiveScraper:
         soup = BeautifulSoup(html_content, 'html.parser')
         return strategy.parse(soup)
     
-    def scrape_old(self, url, css_selector):
-        """
-        Combines fetching and parsing to scrape data from a URL.
-
-        Args:
-            url (str): The URL to scrape.
-            css_selector (str): The CSS selector to extract data.
-
-        Returns:
-            list: A list of extracted data values.
-        """
-        html_content = self.get_page_content(url)
-        if html_content:
-            return self.parse_data(html_content, css_selector)
-        else:
-            return []

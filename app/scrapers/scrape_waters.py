@@ -1,4 +1,4 @@
-from app.unintrusive_scraper.scraper import UnintrusiveScraper
+from app.unintrusive_scraper.page_scraper import UnintrusivePageScraper
 from app.scrape_strategies.waters_strategy import WatersStrategy
 from collections import defaultdict
 
@@ -19,7 +19,7 @@ for region, counties in new_brunswick_region_to_counties.items():
   for c in counties:
       county_to_regions[c].append(region)
 
-scraper = UnintrusiveScraper('https://en.wikipedia.org')
+scraper = UnintrusivePageScraper('https://en.wikipedia.org')
 waters_strategy = WatersStrategy()
 waters = scraper.scrape(waters_strategy)
 
@@ -35,10 +35,11 @@ for water in waters:
   water_data = {
     'name': water['name'],
     'water_type': 'lakes, ponds and reservoirs' if water['type_1'] == 'lake' else 'rivers, brooks and streams'
-    }
+  }
 
   # no duplicate regions
-  regions = set(county_to_regions[water['start_county'][:-7]] + county_to_regions[water['end_county'][:-7]])
+  county_len = len(' County') # remove text at end
+  regions = set(county_to_regions[water['start_county'][:-county_len]] + county_to_regions[water['end_county'][:-7]])
 
   # one water entry for each region
   for region in regions:
