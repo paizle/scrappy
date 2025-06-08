@@ -8,10 +8,23 @@ This is a Python project configured to run inside a Docker container using the o
 
 ## 🗂 Project Structure
 
-├── app/main.py # Replace with your actual main Python file
-├── app/requirements.txt # List of Python dependencies
-├── Dockerfile # Docker build instructions
-└── README.md # Project documentation
+├── app/
+│   ├── __init__.py
+│   ├── main.py                 # Main application script
+│   ├── requirements.txt        # Python dependencies
+│   ├── scrape_strategies/      # Modules for different scraping strategies
+│   │   ├── __init__.py
+│   │   ├── example_strategy.py
+│   │   ├── scrape_waters.py
+│   │   └── waters_strategy.py
+│   └── unintrusive_scraper/    # Core scraper logic
+│       ├── __init__.py
+│       └── page_scraper.py
+├── examples/
+│   └── scrape_example.py       # Example script demonstrating usage
+├── .gitignore
+├── Dockerfile                  # Docker build instructions
+└── README.md                   # Project documentation
 
 ## Build the Docker image
 
