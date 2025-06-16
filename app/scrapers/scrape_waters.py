@@ -48,8 +48,8 @@ def main():
 
     # Determine the regions associated with the water body, handling potential duplicates.
     # It uses the start and end counties of the water body to find all relevant regions.
-    # The 'removesuffix' and slicing are used to clean up county names before lookup.
-    regions = set(county_to_regions[water['start_county'].removesuffix(' County')] + county_to_regions[water['end_county'][:-7]])
+    # The 'removesuffix' is used to clean up county names before lookup.
+    regions = set(county_to_regions[water['start_county'].removesuffix(' County')] + county_to_regions[water['end_county'].removesuffix(' County')])
 
     # Create a separate entry in the results list for each region the water body belongs to.
     # This ensures that if a water body spans multiple regions, it's listed under each.
