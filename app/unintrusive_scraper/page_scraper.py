@@ -22,7 +22,7 @@ class PageScrapingStrategy(ABC):
         pass
 
 class UnintrusivePageScraper:
-    def __init__(self, base_url):
+    def __init__(self, base_url, cache_dir='scraper_cache'):
         """
         Initializes the scraper with a base URL and a User-Agent.
 
@@ -40,7 +40,7 @@ class UnintrusivePageScraper:
             logging.warning(f"Could not read robots.txt: {e}")
         self.delay = 1  # Initial delay between requests (seconds)
         self.max_retries = 3  # Maximum number of retries for failed requests
-        self.cache_dir = "scraper_cache"  # Directory to store cached responses
+        self.cache_dir = cache_dir
         os.makedirs(self.cache_dir, exist_ok=True)  # Create cache directory if it doesn't exist
 
 
@@ -106,24 +106,6 @@ class UnintrusivePageScraper:
             finally:
                 time.sleep(self.delay + random.uniform(0, 1)) # Delay after each attempt
 
-    def parse_data(self, html_content, css_selector):
-        """
-        Parses the HTML content of a page using BeautifulSoup and extracts data based on a CSS selector.
-
-        Args:
-            html_content (str): The HTML content of the page.
-            css_selector (str): A CSS selector to identify the data to extract.
-
-        Returns:
-            list: A list of extracted text values.
-        """
-        if not html_content:
-            return []
-
-        soup = BeautifulSoup(html_content, 'html.parser')
-        elements = soup.select(css_selector)
-        data = [element.text.strip() for element in elements]
-        return data
     
     def scrape(self, strategy: PageScrapingStrategy) -> dict:
         """Perform the scraping using the given strategy."""
