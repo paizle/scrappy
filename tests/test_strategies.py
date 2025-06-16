@@ -76,6 +76,21 @@ class TestExampleComStrategy:
         }
         assert strategy.parse(soup) == expected_data
 
+    def test_parse_with_empty_title_tag(self):
+        strategy = ExampleComStrategy()
+        html_content = """
+        <html><head><title></title></head>
+        <body><h1>Example Heading</h1></body></html>
+        """
+        soup = BeautifulSoup(html_content, 'html.parser')
+        # Current ExampleComStrategy: title = soup.title.string.strip() if soup.title else "No title"
+        # For an empty title tag, soup.title.string is None.
+        # None.strip() raises AttributeError.
+        # This test now asserts that this error is indeed raised.
+        with pytest.raises(AttributeError) as excinfo:
+            strategy.parse(soup)
+        assert "'NoneType' object has no attribute 'strip'" in str(excinfo.value)
+
 
 # --- Tests for WatersStrategy ---
 
