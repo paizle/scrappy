@@ -2,17 +2,37 @@ from bs4 import BeautifulSoup
 from app.unintrusive_scraper.page_scraper import PageScrapingStrategy
 
 class WatersStrategy(PageScrapingStrategy):
+  """
+  Implements a PageScrapingStrategy for extracting information about bodies of water
+  from a specific Wikipedia page.
+  """
   def get_url(self) -> str:
+    """
+    Returns the URL path for the Wikipedia page listing bodies of water in New Brunswick.
+    This path is relative to the base URL provided to the UnintrusivePageScraper.
+    """
     return "/wiki/List_of_bodies_of_water_of_New_Brunswick"
 
-  def parse(self, soup: BeautifulSoup) -> dict:
+  def parse(self, soup: BeautifulSoup) -> list[dict]:
+    """
+    Parses the HTML content of the Wikipedia page to extract water body data.
+
+    Args:
+      soup: A BeautifulSoup object representing the parsed HTML of the page.
+
+    Returns:
+      A list of dictionaries, where each dictionary represents a body of water
+      and contains extracted information like name, type, and location.
+    """
+    # Find the main data table on the page.
     table = soup.find("table", {"class": "wikitable"})
     rows = table.find_all("tr")
 
     data = []
-    # header row has <th>, skip it
+    # Iterate over table rows, skipping the header row (index 0).
     for row in rows[1:]:
         cols = row.find_all(["td"])
+        # Extract text from each cell in the row.
         name = cols[0].get_text(strip=True)
         type1 = cols[1].get_text(strip=True)
         type2 = cols[2].get_text(strip=True)
