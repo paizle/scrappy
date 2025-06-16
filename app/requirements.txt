@@ -2,3 +2,5 @@ python-dotenv
 requests
 beautifulsoup4
 pytest
+flake8
+black
